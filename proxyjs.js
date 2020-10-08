@@ -1,28 +1,21 @@
-var http = require('http');
-var net = require('net');
-var url = require('url');
+var http = require('http'),
+    httpProxy = require('http-proxy');
 
-function request(cReq, cRes) {
-    var u = url.parse(cReq.url);
+//
+// Create a proxy server with custom application logic
+//
+var proxy = httpProxy.createProxyServer({});
 
-    var options = {
-        hostname : u.hostname,
-        port     : u.port || 80,
-        path     : u.path,
-        method     : cReq.method,
-        headers     : cReq.headers
-    };
+//
+// Create your custom server and just call `proxy.web()` to proxy
+// a web request to the target passed in the options
+// also you can use `proxy.ws()` to proxy a websockets request
+//
+var server = http.createServer(function(req, res) {
+    // You can define here your custom logic to handle the request
+    // and then proxy the request.
+    proxy.web(req, res, { target: 'http://127.0.0.1:80' });
+});
 
-    var pReq = http.request(options, function(pRes) {
-        cRes.writeHead(pRes.statusCode, pRes.headers);
-        pRes.pipe(cRes);
-    }).on('error', function(e) {
-        cRes.end();
-    });
-
-    cReq.pipe(pReq);
-}
-
-http.createServer().on('request', request).listen(80, '0.0.0.0');
-
-console.log('service running on 80 port');
+console.log("listening on port 80")
+server.listen(80);

@@ -2,11 +2,14 @@
   "name": "httpproxy",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "proxyjs.js",
   "scripts": {
-    "dev": "node proxyjs.js"
+    "start": "node proxyjs.js"
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "http-proxy": "^1.18.1"
+  }
 }
